@@ -1,3 +1,6 @@
+
+# logic.py
+
 import math
 
 
@@ -27,4 +30,3 @@ class Logic:
         rounded = round(result)
 
         return result, rounded_to, rounded, decimals
-

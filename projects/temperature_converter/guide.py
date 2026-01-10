@@ -1,3 +1,7 @@
+
+# guide.py
+
+
 def print_guide() -> None:
     """Displays a quick usage guide for users."""
     guide = """
@@ -18,3 +22,4 @@ Commands:
 ========================================
 """
     print(guide)
+
