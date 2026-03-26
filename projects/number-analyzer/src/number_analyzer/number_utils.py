@@ -3,7 +3,7 @@
 # number_utils.py
 
 import math
-from types import NumberLike, SquareRoot
+from number_analyzer.types import NumberLike, SquareRoot
 
 
 class NumberUtils:
@@ -27,12 +27,12 @@ class NumberUtils:
         return all(num % i != 0 for i in range(2, int(num**0.5) + 1))
 
     @staticmethod
-    def square_root(num: NumberLike, decimals: int = 2) -> SquareRoot:
+    def square_root(num: NumberLike, sf: int = 2) -> SquareRoot:
         """Calculates the square root of a number.
         Returns exact value, rounded value, and rounding precision.
         """
         result = math.sqrt(num)
-        rounded_to = round(result, decimals)
+        rounded_to = round(result, sf)
         rounded = round(result)
 
-        return result, rounded_to, rounded, decimals
+        return (result, rounded_to, rounded, sf)
