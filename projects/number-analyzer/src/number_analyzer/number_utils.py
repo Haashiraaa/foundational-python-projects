@@ -1,27 +1,33 @@
 
-# logic.py
+
+# number_utils.py
 
 import math
+from types import NumberLike, SquareRoot
 
 
-class Logic:
-    def is_even_or_odd(self, num: int | float) -> bool:
+class NumberUtils:
+
+    @staticmethod
+    def is_even(num: NumberLike) -> bool:
         """Checks if a number is even.
         Returns True if even, False if odd.
         """
         return num % 2 == 0
 
-    def is_prime(self, num: int | float) -> bool:
+    @staticmethod
+    def is_prime(num: NumberLike) -> bool:
         """Checks if a number is prime.
         Returns True for prime numbers, else False.
         """
         if num < 2:
             return False
+        if num == 2:
+            return True
         return all(num % i != 0 for i in range(2, int(num**0.5) + 1))
 
-    def square_root(
-        self, num: int | float, decimals: int = 3
-    ) -> tuple[float, float, int, int]:
+    @staticmethod
+    def square_root(num: NumberLike, decimals: int = 2) -> SquareRoot:
         """Calculates the square root of a number.
         Returns exact value, rounded value, and rounding precision.
         """

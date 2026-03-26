@@ -1,55 +1,56 @@
+
+
 # validator.py
 
 
-from haashi_pkg.utility.utils import Utility
-from classes.logic import Logic
-from typing import Optional
+import logging
+from haashi_pkg.utility import Logger, ScreenUtil as su
+from typing import Optional, Union
 
 
-class Validate:
-    def __init__(self) -> None:
-        """Initializes logic and utility helpers."""
-        self.lc = Logic()
-        self.ut = Utility()
+class CliHandler:
 
-    # ======================
-    # Parse input
-    # ======================
+    @staticmethod
+    def get_input(
+        msg0: str = "Enter a integer to check if it is even or odd",
+        msg1: str = "(or 'q' to return to main-menu)",
+        symbol: str = ">>> ",
+        logger: Optional[Logger] = None
+    ) -> Optional[Union[int, float]]:
 
-    def parse_input(
-        self,
-        prompt_text: str = "Enter a integer to check if it is even or odd",
-        end_prompt_text: str = "(or 'q' to return to main-menu)",
-        prompt_symbol: str = ">>> "
-    ) -> Optional[float]:
-        """Gets user input and converts it to a float.
-        Returns None if user quits, -1 if input is invalid.
-        """
+        stop = None
+        logger = logger or Logger(level=logging.INFO)
 
-        print(f"\n{prompt_text} {end_prompt_text}")
-        user_input = input(prompt_symbol).lower().strip()
+        su.space()
+        logger.info(f"{msg0} {msg1}")
+        user_input = input(symbol).lower().strip()
 
-        if user_input == 'q':
-            return None
+        stop = user_input.lower().strip() == 'q'
+        if stop:
+            return
 
         try:
+            if isinstance(user_input, int):
+                return int(user_input)
 
-            parsed_input = float(user_input)
-
-            if parsed_input < 0:
-                raise ValueError("\nInvalid integer!")
-
-            return parsed_input
+            return float(user_input)
 
         except ValueError:
-            print("\nInvalid integer!")
-            return -1
+            raise ValueError(
+                f"{user_input} is not a valid integer or float."
+            )
 
-    # ======================
-    # Validate even or odd
-    # ======================
 
-    def validate_even_odd(self) -> None:
+class InputValidator:
+
+    def __init__(self, logger: Optional[Logger] = None) -> None:
+        self.logger = logger or Logger(level=logging.INFO)
+
+        # ======================
+        # Validate even or odd
+        # ======================
+
+    def is_even_validator(self, num:) -> None:
         """Runs the even/odd checker loop.
         Handles user input and displays results.
         """
