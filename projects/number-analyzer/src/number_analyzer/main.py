@@ -1,4 +1,3 @@
-
 # main.py
 
 
@@ -9,19 +8,28 @@ from number_analyzer.input_validator import InputHandler, NumberController
 from haashi_pkg.utility import Logger, ScreenUtil as su
 
 
+choice_map = {
+    1: NumberController.check_even,
+    2: NumberController.check_prime,
+    3: NumberController.check_square_root,
+}
+
+
 # ======================
 # Main Menu
 # ======================
 
-def main_menu() -> None:
+
+def main_menu(logger: Optional[Logger] = None) -> None:
     """Displays the list of available operations.
     Helps users choose what action to perform.
     """
+    logger = logger or Logger(level=logging.INFO)
     options: list[str] = [
         "Even or Odd Checker",
         "Prime Checker",
         "Square Root Calculator",
-        "Exit."
+        "Exit.",
     ]
 
     logger.info("Choose an operation:")
@@ -33,53 +41,57 @@ def main_menu() -> None:
 # Main
 # ======================
 
-def main(logger: Optional[Logger] = None) -> None:
 
+def main(logger: Optional[Logger] = None) -> None:
     logger = logger or Logger(level=logging.INFO)
 
     su.space()
     logger.info("Hello! Welcome to the Number Analyzer!")
-    logger.info(
-        "This program will help you with some mathematical operations."
-    )
+    logger.info("This program will help you with some mathematical operations.")
     su.space()
+    su.wait_and_enter()
 
     while True:
-
+        su.clear_screen()
         main_menu()
 
         try:
             user_choice = InputHandler.get_input(
-                prompt="Enter your choice (1-4):",
-                logger=logger
+                prompt="Enter your choice (1-4): ", logger=logger
             )
 
-            if user_choice == 1:
-                validate.validate_even_odd()
-
-            elif user_choice == 2:
-                validate.validate_prime()
-
-            elif user_choice == 3:
-                validate.validate_square_root()
-
-            elif user_choice == 4:
-                logger.info("\nExiting...")
-                ut.clear_line(n=3, timeout=1)
+            if user_choice == 4:
+                logger.info("Exiting Program...")
                 sys.exit(0)
 
-            else:
-                logger.info("\nChoice out of range!")
-                ut.clear_line(n=3, timeout=0.2)
+            if user_choice and user_choice > 4:
+                logger.info(f"Input: ({user_choice}) is out of range!")
+                continue
 
-        except ValueError:
-            logger.info("\nInvalid choice!")
-            ut.clear_line(n=3, timeout=0.2)
+            if user_choice is None:
+                continue
+
+            func = choice_map.get(int(user_choice))
+            if not func:
+                logger.warning(f"Input: ({user_choice}) is invalid")
+                continue
+
+            result = func()
+            if result is None:
+                continue
+            logger.info(result)
+            su.wait_and_enter()
+
+        except KeyboardInterrupt:
+            su.space()
+            logger.info("Program interrupted by user.")
+            sys.exit(0)
+
+        except Exception as exc:
+            logger.error(f"An error occurred: {exc}")
+            logger.error(exception=exc, save_to_json=True)
+            sys.exit(1)
 
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        logger.info()
-        sys.exit(0)
+    main()
